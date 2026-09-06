@@ -9,6 +9,16 @@ st.set_page_config(
     layout="wide"
 )
 
+st.markdown("""
+<style>
+    .block-container { padding-top: 0.8rem; padding-bottom: 0.4rem; max-width: 1500px; }
+    h1 { margin-bottom: 0.15rem !important; }
+    [data-testid="stMetric"] { padding-top: 0.05rem; padding-bottom: 0.05rem; }
+    [data-testid="stMetricValue"] { font-size: 1.85rem; }
+    [data-testid="stSidebar"] .block-container { padding-top: 0.8rem; }
+</style>
+""", unsafe_allow_html=True)
+
 # ============================================================
 # FUNCIONES DE CÁLCULO
 # ============================================================
@@ -146,7 +156,7 @@ def vec(ax, p, v, color="blue"):
 
 
 def draw_element(ax, sx, sy, txy, alpha, sa, ta):
-    ax.set_title("Elemento diferencial rotado", fontsize=11)
+    ax.set_title("Elemento diferencial rotado", fontsize=10.5)
     ax.set_aspect("equal")
     ax.axis("off")
 
@@ -240,18 +250,18 @@ def draw_element(ax, sx, sy, txy, alpha, sa, ta):
     ax.text(0.08, 1.53, f"α={alpha:.1f}°", color="purple")
 
     # leyendas visibles dentro del gráfico
-    y_positions = [0.78, 0.63, 0.48, 0.33]
+    y_positions = [0.76, 0.61, 0.46, 0.31]
 
     for (q, label, color), yf in zip(elem_labels, y_positions):
         ax.annotate(
             label,
             xy=(q[0], q[1]),
             xycoords="data",
-            xytext=(0.96, yf),
+            xytext=(0.94, yf),
             textcoords="axes fraction",
             ha="right",
             va="center",
-            fontsize=8.5,
+            fontsize=8.0,
             color=color,
             bbox=dict(
                 boxstyle="round,pad=0.18",
@@ -270,8 +280,8 @@ def draw_element(ax, sx, sy, txy, alpha, sa, ta):
             zorder=20
         )
 
-    ax.set_xlim(-2.25, 2.75)
-    ax.set_ylim(-2.25, 2.25)
+    ax.set_xlim(-2.30, 2.85)
+    ax.set_ylim(-2.10, 2.10)
 
 
 # ============================================================
@@ -345,10 +355,10 @@ with r4:
 # GRÁFICOS
 # ============================================================
 
-fig = plt.figure(figsize=(14, 7.8), dpi=110)
+fig = plt.figure(figsize=(13.2, 6.3), dpi=110)
 
-ax_mohr = fig.add_axes([0.05, 0.18, 0.59, 0.74])
-ax_elem = fig.add_axes([0.66, 0.22, 0.26, 0.64])
+ax_mohr = fig.add_axes([0.045, 0.20, 0.60, 0.67])
+ax_elem = fig.add_axes([0.665, 0.24, 0.27, 0.55])
 
 th = np.linspace(0, 2*np.pi, 720)
 xx = sm + R*np.cos(th)
@@ -432,7 +442,7 @@ ax_mohr.set_ylim(ymin-pad, ymax+pad)
 ax_mohr.set_aspect("equal", adjustable="box")
 ax_mohr.grid(True, alpha=0.20)
 
-ax_mohr.set_title("Círculo de Mohr y trazas de planos desde P", fontsize=12)
+ax_mohr.set_title("Círculo de Mohr y trazas de planos desde P", fontsize=11)
 ax_mohr.set_xlabel("σ")
 ax_mohr.set_ylabel("τ")
 
@@ -488,21 +498,21 @@ place_nonoverlap_labels(ax_mohr, labels, center_x=sm)
 draw_element(ax_elem, sx, sy, txy, alpha, sa, ta)
 
 # Pie institucional inferior derecho, justificado a la izquierda
-pie_x = 0.68
+pie_x = 0.685
 fig.text(
-    pie_x, 0.105,
+    pie_x, 0.115,
     "Aplicación Circulo de Mohr",
     ha="left", va="center",
     fontfamily="Arial", fontsize=12
 )
 fig.text(
-    pie_x, 0.075,
+    pie_x, 0.082,
     "Material didáctico Estabilidad 2 – F.I. – UNNE",
     ha="left", va="center",
     fontfamily="Arial", fontsize=12
 )
 fig.text(
-    pie_x, 0.047,
+    pie_x, 0.052,
     "Ing. Ricardo Barrios D’Ambra",
     ha="left", va="center",
     fontfamily="Arial", fontsize=8

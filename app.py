@@ -11,11 +11,82 @@ st.set_page_config(
 
 st.markdown("""
 <style>
-    .block-container { padding-top: 0.8rem; padding-bottom: 0.4rem; max-width: 1500px; }
-    h1 { margin-bottom: 0.15rem !important; }
-    [data-testid="stMetric"] { padding-top: 0.05rem; padding-bottom: 0.05rem; }
-    [data-testid="stMetricValue"] { font-size: 1.85rem; }
-    [data-testid="stSidebar"] .block-container { padding-top: 0.8rem; }
+    .block-container {
+        padding-top: 0.7rem;
+        padding-bottom: 0.5rem;
+        max-width: 1550px;
+    }
+
+    h1 { margin-bottom: 0.12rem !important; }
+
+    [data-testid="stMetric"] {
+        padding-top: 0.02rem;
+        padding-bottom: 0.02rem;
+    }
+
+    [data-testid="stMetricValue"] {
+        font-size: 1.75rem;
+    }
+
+    [data-testid="stSidebar"] .block-container {
+        padding-top: 0.7rem;
+    }
+
+    /* Campos de entrada más compactos */
+    [data-testid="stNumberInput"] input {
+        font-size: 0.95rem !important;
+        min-height: 2.25rem !important;
+        padding-top: 0.25rem !important;
+        padding-bottom: 0.25rem !important;
+    }
+
+    /* Adaptación específica para celular */
+    @media (max-width: 768px) {
+        .block-container {
+            padding-left: 0.55rem;
+            padding-right: 0.55rem;
+            padding-top: 0.45rem;
+        }
+
+        h1 {
+            font-size: 1.75rem !important;
+            line-height: 1.15 !important;
+        }
+
+        [data-testid="stSidebar"] {
+            min-width: 260px !important;
+            max-width: 285px !important;
+        }
+
+        [data-testid="stSidebar"] h2 {
+            font-size: 1.15rem !important;
+        }
+
+        [data-testid="stNumberInput"] label,
+        [data-testid="stSlider"] label {
+            font-size: 0.88rem !important;
+        }
+
+        [data-testid="stNumberInput"] input {
+            font-size: 0.88rem !important;
+            min-height: 2.0rem !important;
+        }
+
+        [data-testid="stMetricValue"] {
+            font-size: 1.35rem !important;
+        }
+
+        [data-testid="stMetricLabel"] {
+            font-size: 0.82rem !important;
+        }
+
+        /* Evita márgenes excesivos alrededor de gráficos */
+        [data-testid="stImage"] img,
+        [data-testid="stPlotlyChart"],
+        [data-testid="stPyplotGlobalUse"] {
+            width: 100% !important;
+        }
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -355,10 +426,16 @@ with r4:
 # GRÁFICOS
 # ============================================================
 
-fig = plt.figure(figsize=(13.2, 6.3), dpi=110)
+# En la versión web usamos dos figuras separadas.
+# En computadora se muestran lado a lado; en celular Streamlit las apila,
+# por lo que el Círculo de Mohr aprovecha prácticamente todo el ancho.
 
-ax_mohr = fig.add_axes([0.045, 0.20, 0.60, 0.67])
-ax_elem = fig.add_axes([0.665, 0.24, 0.27, 0.55])
+col_mohr, col_elem = st.columns([2.15, 1.0], gap="small")
+
+# ------------------------------------------------------------
+# CÍRCULO DE MOHR
+# ------------------------------------------------------------
+fig_mohr, ax_mohr = plt.subplots(figsize=(8.6, 7.2), dpi=115)
 
 th = np.linspace(0, 2*np.pi, 720)
 xx = sm + R*np.cos(th)
@@ -368,10 +445,8 @@ ax_mohr.plot(xx, yy, color="black", linewidth=1.8)
 ax_mohr.axhline(0, color="gray", linewidth=0.8)
 ax_mohr.axvline(0, color="gray", linewidth=0.8)
 
-# centro
 ax_mohr.scatter([C[0]], [C[1]], color="black", s=35, zorder=6)
 
-# puntos iniciales
 ax_mohr.scatter(
     [X[0], Y[0]],
     [X[1], Y[1]],
@@ -380,7 +455,7 @@ ax_mohr.scatter(
     zorder=7
 )
 
-# construcción geométrica de P
+# Construcción geométrica de P
 ax_mohr.plot(
     [X[0], P[0]],
     [X[1], P[1]],
@@ -403,7 +478,7 @@ ax_mohr.scatter(
     zorder=8
 )
 
-# planos alfa y alfa+90
+# Planos alfa y alfa+90
 ax_mohr.plot([P[0], sa], [P[1], ta], color="blue", linewidth=2.1)
 ax_mohr.plot([P[0], sa90], [P[1], ta90], color="blue", linewidth=2.1)
 ax_mohr.scatter([sa, sa90], [ta, ta90], color="blue", s=48, zorder=8)
@@ -435,14 +510,17 @@ xmin, xmax = min(all_x), max(all_x)
 ymin, ymax = min(all_y), max(all_y)
 
 span = max(xmax-xmin, ymax-ymin, 1.0)
-pad = 0.25 * span
+pad = 0.23 * span
 
 ax_mohr.set_xlim(xmin-pad, xmax+pad)
 ax_mohr.set_ylim(ymin-pad, ymax+pad)
 ax_mohr.set_aspect("equal", adjustable="box")
 ax_mohr.grid(True, alpha=0.20)
 
-ax_mohr.set_title("Círculo de Mohr y trazas de planos desde P", fontsize=11)
+ax_mohr.set_title(
+    "Círculo de Mohr y trazas de planos desde P",
+    fontsize=11
+)
 ax_mohr.set_xlabel("σ")
 ax_mohr.set_ylabel("τ")
 
@@ -494,31 +572,42 @@ for ss, tt, ang, tauv, label in shear_plot_data:
     })
 
 place_nonoverlap_labels(ax_mohr, labels, center_x=sm)
+fig_mohr.tight_layout(pad=0.8)
 
+with col_mohr:
+    st.pyplot(fig_mohr, use_container_width=True)
+plt.close(fig_mohr)
+
+# ------------------------------------------------------------
+# ELEMENTO DIFERENCIAL
+# ------------------------------------------------------------
+fig_elem, ax_elem = plt.subplots(figsize=(5.2, 5.7), dpi=115)
 draw_element(ax_elem, sx, sy, txy, alpha, sa, ta)
+fig_elem.tight_layout(pad=0.6)
 
-# Pie institucional inferior derecho, justificado a la izquierda
-pie_x = 0.685
-fig.text(
-    pie_x, 0.115,
-    "Aplicación Circulo de Mohr",
-    ha="left", va="center",
-    fontfamily="Arial", fontsize=12
-)
-fig.text(
-    pie_x, 0.082,
-    "Material didáctico Estabilidad 2 – F.I. – UNNE",
-    ha="left", va="center",
-    fontfamily="Arial", fontsize=12
-)
-fig.text(
-    pie_x, 0.052,
-    "Ing. Ricardo Barrios D’Ambra",
-    ha="left", va="center",
-    fontfamily="Arial", fontsize=8
-)
+with col_elem:
+    st.pyplot(fig_elem, use_container_width=True)
+plt.close(fig_elem)
 
-st.pyplot(fig, use_container_width=True)
+# Pie institucional: en escritorio queda hacia la derecha.
+# En celular se adapta naturalmente al ancho disponible.
+st.markdown(
+    """
+    <div style="
+        margin-top:-0.35rem;
+        margin-left:auto;
+        width:max-content;
+        max-width:100%;
+        text-align:left;
+        line-height:1.28;
+    ">
+        <div style="font-family:Arial;font-size:12px;">Aplicación Circulo de Mohr</div>
+        <div style="font-family:Arial;font-size:12px;">Material didáctico Estabilidad 2 – F.I. – UNNE</div>
+        <div style="font-family:Arial;font-size:8px;">Ing. Ricardo Barrios D’Ambra</div>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
 # ============================================================
 # DETALLE NUMÉRICO

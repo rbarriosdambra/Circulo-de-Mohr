@@ -19,15 +19,6 @@ st.markdown("""
 
     h1 { margin-bottom: 0.12rem !important; }
 
-    [data-testid="stMetric"] {
-        padding-top: 0.02rem;
-        padding-bottom: 0.02rem;
-    }
-
-    [data-testid="stMetricValue"] {
-        font-size: 1.75rem;
-    }
-
     [data-testid="stSidebar"] .block-container {
         padding-top: 0.7rem;
     }
@@ -70,14 +61,6 @@ st.markdown("""
         [data-testid="stNumberInput"] input {
             font-size: 0.88rem !important;
             min-height: 2.0rem !important;
-        }
-
-        [data-testid="stMetricValue"] {
-            font-size: 1.35rem !important;
-        }
-
-        [data-testid="stMetricLabel"] {
-            font-size: 0.82rem !important;
         }
 
         /* Evita márgenes excesivos alrededor de gráficos */
@@ -404,23 +387,101 @@ P = np.array([sx, tyx])
 # RESULTADOS
 # ============================================================
 
-r1, r2, r3, r4 = st.columns(4)
+st.markdown(
+    f"""
+    <style>
+        .mohr-metrics {{
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 0.55rem;
+            margin: 0.15rem 0 0.45rem 0;
+        }}
 
-with r1:
-    st.metric("σmáx", f"{smax:.4g}")
-    st.caption(f"α = {a_smax:.2f}°")
+        .mohr-metric-card {{
+            padding: 0.30rem 0.45rem 0.28rem 0.45rem;
+            border-radius: 0.45rem;
+            line-height: 1.05;
+        }}
 
-with r2:
-    st.metric("σmín", f"{smin:.4g}")
-    st.caption(f"α = {a_smin:.2f}°")
+        .mohr-metric-title {{
+            font-size: 0.90rem;
+            line-height: 1.05;
+            margin: 0;
+            opacity: 0.90;
+        }}
 
-with r3:
-    st.metric("τmáx", f"{taumax:.4g}")
-    st.caption(f"α = {a_tmax:.2f}°")
+        .mohr-metric-value {{
+            font-size: 1.65rem;
+            line-height: 1.00;
+            margin: 0.10rem 0 0.08rem 0;
+            font-weight: 500;
+        }}
 
-with r4:
-    st.metric("τmín", f"{taumin:.4g}")
-    st.caption(f"α = {a_tmin:.2f}°")
+        .mohr-metric-angle {{
+            font-size: 0.78rem;
+            line-height: 1.00;
+            margin: 0;
+            opacity: 0.72;
+        }}
+
+        @media (max-width: 768px) {{
+            .mohr-metrics {{
+                grid-template-columns: repeat(4, minmax(0, 1fr));
+                gap: 0.18rem;
+                margin-top: 0.05rem;
+                margin-bottom: 0.25rem;
+            }}
+
+            .mohr-metric-card {{
+                padding: 0.18rem 0.10rem 0.16rem 0.10rem;
+            }}
+
+            .mohr-metric-title {{
+                font-size: 0.68rem;
+                line-height: 1.0;
+            }}
+
+            .mohr-metric-value {{
+                font-size: 1.05rem;
+                line-height: 1.0;
+                margin: 0.05rem 0 0.04rem 0;
+            }}
+
+            .mohr-metric-angle {{
+                font-size: 0.58rem;
+                line-height: 1.0;
+            }}
+        }}
+    </style>
+
+    <div class="mohr-metrics">
+        <div class="mohr-metric-card">
+            <div class="mohr-metric-title">σmáx</div>
+            <div class="mohr-metric-value">{smax:.4g}</div>
+            <div class="mohr-metric-angle">α = {a_smax:.2f}°</div>
+        </div>
+
+        <div class="mohr-metric-card">
+            <div class="mohr-metric-title">σmín</div>
+            <div class="mohr-metric-value">{smin:.4g}</div>
+            <div class="mohr-metric-angle">α = {a_smin:.2f}°</div>
+        </div>
+
+        <div class="mohr-metric-card">
+            <div class="mohr-metric-title">τmáx</div>
+            <div class="mohr-metric-value">{taumax:.4g}</div>
+            <div class="mohr-metric-angle">α = {a_tmax:.2f}°</div>
+        </div>
+
+        <div class="mohr-metric-card">
+            <div class="mohr-metric-title">τmín</div>
+            <div class="mohr-metric-value">{taumin:.4g}</div>
+            <div class="mohr-metric-angle">α = {a_tmin:.2f}°</div>
+        </div>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
 # ============================================================
 # GRÁFICOS

@@ -387,101 +387,66 @@ P = np.array([sx, tyx])
 # RESULTADOS
 # ============================================================
 
-st.markdown(
-    f"""
-    <style>
-        .mohr-metrics {{
-            display: grid;
-            grid-template-columns: repeat(4, minmax(0, 1fr));
-            gap: 0.55rem;
-            margin: 0.15rem 0 0.45rem 0;
-        }}
+# Resultados principales compactos y responsive.
+# HTML sin sangría inicial para que Markdown no lo interprete como código.
+metrics_html = f"""<style>
+.mohr-metrics {{
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.35rem;
+    margin: 0.08rem 0 0.30rem 0;
+}}
+.mohr-metric-card {{
+    padding: 0.20rem 0.30rem;
+    line-height: 1;
+}}
+.mohr-metric-title {{
+    font-size: 0.84rem;
+    line-height: 1;
+    margin: 0;
+    opacity: 0.90;
+}}
+.mohr-metric-value {{
+    font-size: 1.40rem;
+    line-height: 1;
+    margin: 0.05rem 0 0.03rem 0;
+    font-weight: 500;
+}}
+.mohr-metric-angle {{
+    font-size: 0.70rem;
+    line-height: 1;
+    margin: 0;
+    opacity: 0.72;
+}}
+@media (max-width: 768px) {{
+    .mohr-metrics {{
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 0.08rem;
+        margin: 0.02rem 0 0.16rem 0;
+    }}
+    .mohr-metric-card {{
+        padding: 0.07rem 0.02rem;
+    }}
+    .mohr-metric-title {{
+        font-size: 0.60rem;
+    }}
+    .mohr-metric-value {{
+        font-size: 0.88rem;
+        margin: 0.02rem 0;
+    }}
+    .mohr-metric-angle {{
+        font-size: 0.50rem;
+    }}
+}}
+</style>
+<div class="mohr-metrics">
+<div class="mohr-metric-card"><div class="mohr-metric-title">σmáx</div><div class="mohr-metric-value">{smax:.4g}</div><div class="mohr-metric-angle">α = {a_smax:.2f}°</div></div>
+<div class="mohr-metric-card"><div class="mohr-metric-title">σmín</div><div class="mohr-metric-value">{smin:.4g}</div><div class="mohr-metric-angle">α = {a_smin:.2f}°</div></div>
+<div class="mohr-metric-card"><div class="mohr-metric-title">τmáx</div><div class="mohr-metric-value">{taumax:.4g}</div><div class="mohr-metric-angle">α = {a_tmax:.2f}°</div></div>
+<div class="mohr-metric-card"><div class="mohr-metric-title">τmín</div><div class="mohr-metric-value">{taumin:.4g}</div><div class="mohr-metric-angle">α = {a_tmin:.2f}°</div></div>
+</div>"""
 
-        .mohr-metric-card {{
-            padding: 0.30rem 0.45rem 0.28rem 0.45rem;
-            border-radius: 0.45rem;
-            line-height: 1.05;
-        }}
-
-        .mohr-metric-title {{
-            font-size: 0.90rem;
-            line-height: 1.05;
-            margin: 0;
-            opacity: 0.90;
-        }}
-
-        .mohr-metric-value {{
-            font-size: 1.65rem;
-            line-height: 1.00;
-            margin: 0.10rem 0 0.08rem 0;
-            font-weight: 500;
-        }}
-
-        .mohr-metric-angle {{
-            font-size: 0.78rem;
-            line-height: 1.00;
-            margin: 0;
-            opacity: 0.72;
-        }}
-
-        @media (max-width: 768px) {{
-            .mohr-metrics {{
-                grid-template-columns: repeat(4, minmax(0, 1fr));
-                gap: 0.18rem;
-                margin-top: 0.05rem;
-                margin-bottom: 0.25rem;
-            }}
-
-            .mohr-metric-card {{
-                padding: 0.18rem 0.10rem 0.16rem 0.10rem;
-            }}
-
-            .mohr-metric-title {{
-                font-size: 0.68rem;
-                line-height: 1.0;
-            }}
-
-            .mohr-metric-value {{
-                font-size: 1.05rem;
-                line-height: 1.0;
-                margin: 0.05rem 0 0.04rem 0;
-            }}
-
-            .mohr-metric-angle {{
-                font-size: 0.58rem;
-                line-height: 1.0;
-            }}
-        }}
-    </style>
-
-    <div class="mohr-metrics">
-        <div class="mohr-metric-card">
-            <div class="mohr-metric-title">σmáx</div>
-            <div class="mohr-metric-value">{smax:.4g}</div>
-            <div class="mohr-metric-angle">α = {a_smax:.2f}°</div>
-        </div>
-
-        <div class="mohr-metric-card">
-            <div class="mohr-metric-title">σmín</div>
-            <div class="mohr-metric-value">{smin:.4g}</div>
-            <div class="mohr-metric-angle">α = {a_smin:.2f}°</div>
-        </div>
-
-        <div class="mohr-metric-card">
-            <div class="mohr-metric-title">τmáx</div>
-            <div class="mohr-metric-value">{taumax:.4g}</div>
-            <div class="mohr-metric-angle">α = {a_tmax:.2f}°</div>
-        </div>
-
-        <div class="mohr-metric-card">
-            <div class="mohr-metric-title">τmín</div>
-            <div class="mohr-metric-value">{taumin:.4g}</div>
-            <div class="mohr-metric-angle">α = {a_tmin:.2f}°</div>
-        </div>
-    </div>
-    """,
-    unsafe_allow_html=True
-)
+st.markdown(metrics_html, unsafe_allow_html=True)
 
 # ============================================================
 # GRÁFICOS
